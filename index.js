@@ -59,11 +59,14 @@ var Model = function (initialState, options) {
 
   var model = function (controller) {
 
+    function onUpdate(event) {
+      var changes = event.data.paths.reduce(update, {})
+      controller.emit('flush', changes);
+    }
+
     controller.on('change', function () {
-      tree.once('update', function (event) {
-        var changes = event.data.paths.reduce(update, {})
-        controller.emit('flush', changes);
-      });
+      tree.removeListener('update', onUpdate);
+      tree.once('update', onUpdate);
       tree.commit();
     });
 
