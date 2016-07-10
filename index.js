@@ -60,11 +60,13 @@ var Model = function (initialState, options) {
   var model = function (controller) {
 
     controller.on('change', function () {
-      tree.once('update', function (event) {
-        var changes = event.data.paths.reduce(update, {})
-        controller.emit('flush', changes);
-      });
-      tree.commit();
+      if (tree._transaction.length) {
+        tree.once('update', function (event) {
+          var changes = event.data.paths.reduce(update, {})
+          controller.emit('flush', changes);
+        });
+        tree.commit();
+      }
     });
 
     controller.on('reset', function () {
