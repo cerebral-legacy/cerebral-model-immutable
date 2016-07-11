@@ -65,7 +65,7 @@ var Model = function (initialState, options) {
     }
 
     controller.on('change', function () {
-      tree.removeListener('update', onUpdate);
+      tree.off('update', onUpdate);
       tree.once('update', onUpdate);
       tree.commit();
     });
