@@ -36,6 +36,19 @@ function deepmerge(target, src) {
    return dst;
 };
 
+function traverse(value, cb, path) {
+  if (!Array.isArray(value) && typeof value === 'object' && value !== null) {
+    Object.keys(value).forEach(function (key) {
+      path.push(key);
+      traverse(value[key], cb, path);
+      path.pop();
+    });
+  }
+  var valuePath = path.slice();
+  valuePath.pop();
+  cb(valuePath, value);
+}
+
 var Model = function (initialState, options) {
 
   options = options || {};
@@ -76,7 +89,9 @@ var Model = function (initialState, options) {
 
     controller.on('seek', function (seek, recording) {
       recording.initialState.forEach(function (state) {
-        tree.set(state.path, state.value);
+        traverse(state.value, function (path, value) {
+          tree.set(state.path.concat(path), value);
+        }, []);
       });
     });
 
