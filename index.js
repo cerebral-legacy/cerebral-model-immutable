@@ -36,17 +36,25 @@ function deepmerge(target, src) {
    return dst;
 };
 
-function traverse(value, cb, path) {
-  if (!Array.isArray(value) && typeof value === 'object' && value !== null) {
-    Object.keys(value).forEach(function (key) {
-      path.push(key);
-      traverse(value[key], cb, path);
-      path.pop();
-    });
+function createForcedChange(state, changes) {
+  function traverse(currentPath, path, currentChangePath) {
+    if (
+      !Array.isArray(currentPath) &&
+      typeof currentPath === 'object' &&
+      currentPath !== null &&
+      Object.keys(currentPath).length
+    ) {
+      Object.keys(currentPath).forEach(function (key) {
+        path.push(key)
+        currentChangePath[key] = traverse(currentPath[key], path, {})
+        path.pop()
+      })
+      return currentChangePath
+    }
+    return true
   }
-  var valuePath = path.slice();
-  valuePath.pop();
-  cb(valuePath, value);
+  traverse(state, [], changes)
+  return changes
 }
 
 var Model = function (initialState, options) {
@@ -72,6 +80,10 @@ var Model = function (initialState, options) {
 
   var model = function (controller) {
 
+    controller.on('modulesLoaded', function () {
+      initialState = tree.toJSON()
+    })
+
     function onUpdate(event) {
       var changes = event.data.paths.reduce(update, {})
       controller.emit('flush', changes);
@@ -84,15 +96,19 @@ var Model = function (initialState, options) {
     });
 
     controller.on('reset', function () {
-      tree.set(initialState);
+      tree.set(initialState)
+      tree.commit();
+      var forcedChanges = createForcedChange(initialState, {})
+      controller.emit('flush', forcedChanges)
     });
 
     controller.on('seek', function (seek, recording) {
       recording.initialState.forEach(function (state) {
-        traverse(state.value, function (path, value) {
-          tree.set(state.path.concat(path), value);
-        }, []);
+        tree.set(state.path, state.value)
       });
+      tree.commit();
+      var forcedChanges = createForcedChange(tree.get(), {})
+      controller.emit('flush', forcedChanges)
     });
 
     return {
