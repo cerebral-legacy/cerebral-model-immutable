@@ -89,9 +89,8 @@ var Model = function (initialState, options) {
       controller.emit('flush', changes);
     }
 
+    tree.on('update', onUpdate);
     controller.on('change', function () {
-      tree.off('update', onUpdate);
-      tree.once('update', onUpdate);
       tree.commit();
     });
 
