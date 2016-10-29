@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cerebral/cerebral-model-immutable.git"
+    "url": "https://github.com/cerebral-legacy/cerebral-model-immutable.git"
   },
   "keywords": [
     "cerebral",
@@ -22,9 +22,9 @@
   "author": "Christian Alfoni",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cerebral/cerebral-model-immutable/issues"
+    "url": "https://github.com/cerebral-legacy/cerebral-model-immutable/issues"
   },
-  "homepage": "https://github.com/cerebral/cerebral-model-immutable#readme",
+  "homepage": "https://github.com/cerebral-legacy/cerebral-model-immutable#readme",
   "config": {
     "commitizen": {
       "path": "node_modules/cz-customizable"
