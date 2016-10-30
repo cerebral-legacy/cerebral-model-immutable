@@ -1,12 +1,8 @@
 {
   "name": "cerebral-model-immutable",
-  "version": "0.0.0-semantically-released",
+  "version": "0.1.5",
   "description": "Immutable Model layer for Cerebral",
   "main": "index.js",
-  "scripts": {
-    "test": "true",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cerebral-legacy/cerebral-model-immutable.git"
@@ -33,18 +29,11 @@
       "commit-msg": "validate-commit-msg"
     }
   },
-  "release": {
-    "analyzeCommits": "./sr-prerelease.js"
-  },
   "dependencies": {
     "baobab": "^2.3.3"
   },
   "devDependencies": {
     "commitizen": "^2.5.0",
-    "cz-customizable": "^2.7.1",
-    "conventional-changelog": "0.0.17",
-    "ghooks": "^1.0.3",
-    "validate-commit-msg": "^1.1.1",
-    "semantic-release": "^4.3.5"
+    "cz-customizable": "^2.7.1"
   }
 }
